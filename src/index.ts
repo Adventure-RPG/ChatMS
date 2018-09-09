@@ -2,15 +2,36 @@ import * as express from 'express';
 import * as socketIo from 'socket.io';
 import { Server, createServer } from 'http';
 import { Config } from '../config';
+import * as redis from 'redis';
+import { UserIF } from './users';
 
 const app: express.Application = express();
 const port: string | number = Config.port || process.env.PORT;
 const server: Server = createServer(app);
 const io = socketIo(server);
 
+const users: {[key:string]:UserIF} = {};
+
 io.on('connection', (socket: any) => {
+  const user: UserIF = (users[socket.id] = {
+    ws: socket,
+    rc: redis.createClient({ url: `${Config.redis_url}` })
+  });
+
+  user.rc.on('message', (channel: string, message: string) => {
+    socket.emit('message', message);
+  });
+
   socket.on('message', (msg: string) => {
-    io.sockets.emit('message', msg);
+    user.rc.publish(`${Config.main_room}`, msg);
+  });
+
+  user.rc.subscribe(`${Config.main_room}`);
+
+  socket.on('disconnect', () => {
+    users[socket.id].rc.unsubscribe();
+    users[socket].rc.quit();
+    delete users[socket.id];
   });
 });
 

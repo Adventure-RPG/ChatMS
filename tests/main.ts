@@ -42,7 +42,6 @@ describe('Chat Events', () => {
                 chai.expect(msg).to.equal(testMsg);
                 done();
             })
-        })
+        });
     });
-
 });

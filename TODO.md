@@ -8,3 +8,4 @@
 - user typing hint
 - list of connected users
 - messages deletion & editing
+- XSS protection
