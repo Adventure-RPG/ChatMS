@@ -3,14 +3,16 @@ import {expect} from 'chai';
 import {Config} from "../config";
 import * as redis from 'redis';
 
+const redis_url: string = process.env.REDIS_URL || Config.redis_url;
+
 let sub, pub;
 
 describe('Redis Events', () => {
   beforeEach((done) => {
 
       // connect two io clients
-      sub = redis.createClient({url:`${Config.redis_url}`});
-      pub = redis.createClient({url:`${Config.redis_url}`});
+      sub = redis.createClient({url: `${redis_url}`});
+      pub = redis.createClient({url: `${redis_url}`});
 
       // finish beforeEach setup
       done()
