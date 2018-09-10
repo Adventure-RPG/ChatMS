@@ -16,7 +16,7 @@ const users: { [key: string]: UserIF } = {};
 io.on('connection', (socket: any) => {
   const user: UserIF = (users[socket.id] = {
     ws: socket,
-    rc: redis.createClient({ url: ` ${redis_url} `, })
+    rc: redis.createClient({ url: ` ${redis_url} ` })
   });
 
   user.rc.on('message', (channel: string, message: string) => {
@@ -27,6 +27,7 @@ io.on('connection', (socket: any) => {
     user.rc.publish(`${Config.main_room}`, msg);
   });
 
+  console.log('test');
   user.rc.subscribe(`${Config.main_room}`);
 
   socket.on('disconnect', () => {
