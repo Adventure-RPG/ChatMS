@@ -24,10 +24,13 @@ io.on('connection', (socket: any) => {
   });
 
   socket.on('message', (msg: string) => {
-    user.rc.publish(`${Config.main_room}`, msg);
+    try {
+      user.rc.publish(`${Config.main_room}`, msg);
+    } catch (e) {
+      console.log(e);
+    }
   });
 
-  console.log('test');
   user.rc.subscribe(`${Config.main_room}`);
 
   socket.on('disconnect', () => {

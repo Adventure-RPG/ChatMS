@@ -10,6 +10,8 @@ services:
       - "9222:9222"
     links:
       - redis
+    depends_on:
+      - redis
     environment:
       - REDIS_URL=redis://redis:6379
   redis:
@@ -18,3 +20,4 @@ services:
     command: redis-server --appendonly yes
     ports:
       - "6379:6379"
+    network_mode: host
