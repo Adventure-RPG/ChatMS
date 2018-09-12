@@ -20,4 +20,3 @@ services:
     command: redis-server --appendonly yes
     ports:
       - "6379:6379"
-    network_mode: host
