@@ -13,31 +13,40 @@ const io = socketIo(server);
 
 const users: { [key: string]: UserIF } = {};
 
+const pub: redis.RedisClient = redis.createClient({ url: `${redis_url}` });
+
 io.on('connection', (socket: any) => {
-  const user: UserIF = (users[socket.id] = {
+  let user: UserIF;
+  user = users[socket.id] = {
     ws: socket,
     rc: redis.createClient({ url: ` ${redis_url} ` })
-  });
+  };
 
-  user.rc.on('message', (channel: string, message: string) => {
-    socket.emit('message', message);
+  user.rc.subscribe(`${Config.main_room}`, () => {
+    user.rc.on('message', (channel: string, message: string) => {
+      socket.emit('message', message);
+    });
   });
 
   socket.on('message', (msg: string) => {
     try {
-      user.rc.publish(`${Config.main_room}`, msg);
+      pub.publish(`${Config.main_room}`, msg);
     } catch (e) {
       console.log(e);
     }
   });
 
-  user.rc.subscribe(`${Config.main_room}`);
-
-  socket.on('disconnect', () => {
-    users[socket.id].rc.unsubscribe();
-    users[socket].rc.quit();
-    delete users[socket.id];
-  });
+  try {
+    socket.on('disconnect', () => {
+      users[socket.id].rc.unsubscribe();
+      if (users[socket] && users[socket].rc) {
+        users[socket].rc.quit();
+      }
+      delete users[socket.id];
+    });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 // Set port for listen on server

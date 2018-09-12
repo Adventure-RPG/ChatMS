@@ -6,7 +6,7 @@
     "postinstall": "npm run compile",
     "compile": "tsc -p ./src",
     "watch": "tsc -w -p ./src",
-    "debug": "nodemon --watch ./dist --inspect=0.0.0.0:9222 --nolazy ./dist/src/index.js",
+    "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy ./dist/src/index.js",
     "prestart": "npm run compile",
     "start": "node ./dist/src/index.js",
     "test": "mocha -r ts-node/register tests/**/*.ts",
