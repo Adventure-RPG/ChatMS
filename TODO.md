@@ -3,7 +3,8 @@
 - websocket-based node.js server +
 - mongodb as storage +
 - typescript realization +
-- real-time communication via websocket
+- real-time communication via websocket +
+- token-based authentication
 - multirooms & public chat
 - user typing hint
 - list of connected users

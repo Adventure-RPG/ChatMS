@@ -16,32 +16,37 @@ let testMsg = 'HelloWorld',
     sender: Socket,
     receiver: Socket;
 
+const CONNECTION_NUM = 2;
+let users = [];
+
 describe('Chat Events', () => {
     beforeEach((done) => {
-
         // connect two io clients
-        sender = socketIo(`http://localhost:${Config.port}/`, ioOptions);
-        receiver = socketIo(`http://localhost:${Config.port}/`, ioOptions);
+      for (let i = 0; i < CONNECTION_NUM; i++) {
+          users.push(socketIo(`http://localhost:${Config.port}/`, ioOptions));
+      }
 
         // finish beforeEach setup
         done()
     });
 
     afterEach((done) => {
-
-        // disconnect io clients after each test
-        sender.disconnect();
-        receiver.disconnect();
+        for(let i = 0; i < CONNECTION_NUM; i++) {
+          // disconnect io clients after each test
+            users[i].disconnect();
+        }
         done();
     });
 
     describe('Message Events', () => {
         it('Clients should receive a message when the `message` event is emited.', (done) => {
-            sender.emit('message', testMsg)
-            receiver.on('message', (msg: string) => {
-                chai.expect(msg).to.equal(testMsg);
-                done();
-            })
+            for (let i = 0; i < CONNECTION_NUM; i++) {
+                users[i].on('message', (msg: string) => {
+                  chai.expect(msg).to.equal(testMsg);
+                  if (i == CONNECTION_NUM - 1) done();
+                });
+                users[i].emit('message', testMsg);
+            }
         });
     });
 });
