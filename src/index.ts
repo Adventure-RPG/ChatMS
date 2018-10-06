@@ -33,6 +33,10 @@ io.on('connection', (socket: any) => {
     pub.publish(`${Config.main_room}`, JSON.stringify(message));
   });
 
+  user.ws.on('datetime', (message: any) => {
+    user.ws.emit('datetime', { datetime: { time: new Date().getTime() } });
+  });
+
   try {
     users[socket.id].ws.on('disconnect', () => {
       users[socket.id].rc.unsubscribe();
