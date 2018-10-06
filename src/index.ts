@@ -25,7 +25,7 @@ io.on('connection', (socket: any) => {
   user.rc.subscribe(`${Config.main_room}`, () => {
     user.rc.on('message', (channel: string, message: any) => {
       let msg = JSON.parse(message);
-      user.ws.emit('message', JSON.stringify(msg));
+      user.ws.emit('message', msg);
     });
   });
 

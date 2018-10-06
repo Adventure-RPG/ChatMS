@@ -41,11 +41,10 @@ describe('Chat Events', () => {
         it('Clients should receive a message when the `message` event is emited.', (done) => {
             let testMsgStr = JSON.stringify(testMsg);
             for (let i = 0; i < CONNECTION_NUM; i++) {
-                users[i].on('message', (msg: string) => {
-                  chai.expect(msg).to.equal(testMsgStr);
+                users[i].on('message', (msg: any) => {
+                  chai.expect(JSON.stringify(msg)).to.equal(testMsgStr);
                   if (i == CONNECTION_NUM - 1) done();
                 });
-                console.log(testMsg);
                 users[i].emit('message', testMsg);
             }
         });
