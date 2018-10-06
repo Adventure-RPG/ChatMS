@@ -1,5 +1,4 @@
 'use strict'
-import * as http from "http";
 import * as socketIo from 'socket.io-client';
 import * as chai from 'chai';
 import {Config} from "../config";
@@ -12,7 +11,7 @@ const ioOptions = {
     reconnection: false
 };
 
-let testMsg = 'HelloWorld',
+let testMsg = {"text": "Hello world!"},
     sender: Socket,
     receiver: Socket;
 
@@ -40,11 +39,13 @@ describe('Chat Events', () => {
 
     describe('Message Events', () => {
         it('Clients should receive a message when the `message` event is emited.', (done) => {
+            let testMsgStr = JSON.stringify(testMsg);
             for (let i = 0; i < CONNECTION_NUM; i++) {
                 users[i].on('message', (msg: string) => {
-                  chai.expect(msg).to.equal(testMsg);
+                  chai.expect(msg).to.equal(testMsgStr);
                   if (i == CONNECTION_NUM - 1) done();
                 });
+                console.log(testMsg);
                 users[i].emit('message', testMsg);
             }
         });

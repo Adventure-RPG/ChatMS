@@ -26,16 +26,15 @@ describe('Redis Events', () => {
   });
 
   it('Should communicate channel between two users', (done) => {
-    let channelName = "test_channel",
-        testMsg = "test_message";
+    let channelName = "test_channel", testMsg = {"text":"test_message"};
 
     sub.on("subscribe", (channel, count) => {
-      pub.publish(channelName, testMsg);
+      pub.publish(channelName, JSON.stringify(testMsg));
     });
 
-    sub.on("message", (channel, message) => {
+    sub.on("message", (channel, message: string) => {
       expect(channel).to.equal(channelName);
-      expect(message).to.equal(testMsg);
+      expect(message).to.equal(JSON.stringify(testMsg));
       sub.unsubscribe();
       done();
     });

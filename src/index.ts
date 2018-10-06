@@ -23,24 +23,21 @@ io.on('connection', (socket: any) => {
   };
 
   user.rc.subscribe(`${Config.main_room}`, () => {
-    user.rc.on('message', (channel: string, message: string) => {
-      socket.emit('message', message);
+    user.rc.on('message', (channel: string, message: any) => {
+      let msg = JSON.parse(message);
+      user.ws.emit('message', JSON.stringify(msg));
     });
   });
 
-  socket.on('message', (msg: string) => {
-    try {
-      pub.publish(`${Config.main_room}`, msg);
-    } catch (e) {
-      console.log(e);
-    }
+  user.ws.on('message', (message: any) => {
+    pub.publish(`${Config.main_room}`, JSON.stringify(message));
   });
 
   try {
-    socket.on('disconnect', () => {
+    users[socket.id].ws.on('disconnect', () => {
       users[socket.id].rc.unsubscribe();
-      if (users[socket] && users[socket].rc) {
-        users[socket].rc.quit();
+      if (users[socket.id] && users[socket.id].rc) {
+        users[socket.id].rc.quit();
       }
       delete users[socket.id];
     });
