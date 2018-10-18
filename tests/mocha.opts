@@ -3,3 +3,4 @@
 --reporter spec
 --bail
 --check-leaks
+--lib es2015

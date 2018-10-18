@@ -10,6 +10,7 @@
     "prestart": "npm run compile",
     "start": "node ./dist/src/index.js",
     "test": "mocha -r ts-node/register tests/**/*.ts --timeout 20000",
+    "test-2015": "mocha -r ts-node/register tests/**/*.ts --opts ./tests/mocha.opts",
     "debugTest": "DEBUG=* mocha -r ts-node/register test/**/*.ts",
     "pretest": "npm run format:full",
     "docker-debug": "docker-compose up",

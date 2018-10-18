@@ -1,4 +1,5 @@
 'use strict'
+
 import * as socketIo from 'socket.io-client';
 import * as chai from 'chai';
 import {Config} from "../config";
@@ -37,7 +38,7 @@ describe('Chat Events', () => {
         done();
     });
 
-      describe('Message Events', () => {
+      describe('Message Events', async () => {
         it('Clients should receive a message when the `message` event is emited.', (done) => {
           let testMsgStr = JSON.stringify(testMsg);
           for (let i = 0; i < CONNECTION_NUM; i++) {
