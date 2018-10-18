@@ -30,7 +30,7 @@ describe('Chat Events', () => {
     });
 
     afterEach((done) => {
-        for(let i = 0; i < CONNECTION_NUM; i++) {
+        for (let i = 0; i < CONNECTION_NUM; i++) {
           // disconnect io clients after each test
             users[i].disconnect();
         }
@@ -50,16 +50,18 @@ describe('Chat Events', () => {
         });
       });
 
-      describe('Date Events', () => {
-        it('Clients should receive a date with datetime from server.', (done) => {
-          let testDate = {datetime: {time: new Date().getTime()}};
-          for (let i = 0; i < CONNECTION_NUM; i++) {
-            users[i].on('datetime', (msg: any) => {
-              chai.expect(msg).to.have.property('datetime').to.have.property('time');
-              if (i == CONNECTION_NUM - 1) done();
-            });
-            users[i].emit('datetime', testDate);
-          }
-        });
+    describe('Date Events', () => {
+      it('Clients should receive a date with datetime from server.', (done) => {
+        let testDate = {datetime: {time: new Date().getTime()}};
+        for (let i = 0; i < CONNECTION_NUM; i++) {
+          users[i].on('datetime', (msg: any) => {
+            Chai.expect(msg).to.have.property('datetime').to.have.property('time');
+            if (i === CONNECTION_NUM - 1) {
+                done();
+            }
+          });
+          users[i].emit('datetime', testDate);
+        }
       });
+    });
 });
