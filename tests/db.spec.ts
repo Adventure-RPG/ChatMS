@@ -5,7 +5,7 @@ import * as redis from 'redis';
 
 const redis_url: string = process.env.REDIS_URL || Config.redis_url;
 
-let sub, pub;
+let sub: any, pub: any;
 
 describe('Redis Events', () => {
   beforeEach((done) => {
@@ -26,13 +26,13 @@ describe('Redis Events', () => {
   });
 
   it('Should communicate channel between two users', (done) => {
-    let channelName = "test_channel", testMsg = {"text":"test_message"};
+    let channelName: string = "test_channel", testMsg: any = {"text":"test_message"};
 
-    sub.on("subscribe", (channel, count) => {
+    sub.on("subscribe", (channel: string, count: any) => {
       pub.publish(channelName, JSON.stringify(testMsg));
     });
 
-    sub.on("message", (channel, message: string) => {
+    sub.on("message", (channel: string, message: string) => {
       expect(channel).to.equal(channelName);
       expect(message).to.equal(JSON.stringify(testMsg));
       sub.unsubscribe();
