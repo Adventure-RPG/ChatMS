@@ -1,7 +1,7 @@
 'use strict'
 
 import * as socketIo from 'socket.io-client';
-import * as chai from 'chai';
+import Chai from 'chai';
 import {Config} from "../config";
 import Socket = SocketIOClient.Socket;
 
@@ -31,7 +31,7 @@ describe('Chat Events', () => {
     });
 
     afterEach((done) => {
-        for(let i = 0; i < CONNECTION_NUM; i++) {
+        for (let i = 0; i < CONNECTION_NUM; i++) {
           // disconnect io clients after each test
             users[i].disconnect();
         }
@@ -43,7 +43,7 @@ describe('Chat Events', () => {
         let testMsgStr = JSON.stringify(testMsg);
         for (let i = 0; i < CONNECTION_NUM; i++) {
           users[i].on('message', (msg: any) => {
-            chai.expect(JSON.stringify(msg)).to.equal(testMsgStr);
+            Chai.expect(JSON.stringify(msg)).to.equal(testMsgStr);
             if (i === CONNECTION_NUM - 1) {
                 done();
             }
@@ -58,7 +58,7 @@ describe('Chat Events', () => {
         let testDate = {datetime: {time: new Date().getTime()}};
         for (let i = 0; i < CONNECTION_NUM; i++) {
           users[i].on('datetime', (msg: any) => {
-            chai.expect(msg).to.have.property('datetime').to.have.property('time');
+            Chai.expect(msg).to.have.property('datetime').to.have.property('time');
             if (i === CONNECTION_NUM - 1) {
                 done();
             }
