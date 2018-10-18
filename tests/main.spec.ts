@@ -37,25 +37,27 @@ describe('Chat Events', () => {
         done();
     });
 
-      describe('Message Events', () => {
-        it('Clients should receive a message when the `message` event is emited.', (done) => {
-          let testMsgStr = JSON.stringify(testMsg);
-          for (let i = 0; i < CONNECTION_NUM; i++) {
-            users[i].on('message', (msg: any) => {
-              chai.expect(JSON.stringify(msg)).to.equal(testMsgStr);
-              if (i == CONNECTION_NUM - 1) done();
-            });
-            users[i].emit('message', testMsg);
-          }
-        });
+    describe('Message Events', () => {
+      it('Clients should receive a message when the `message` event is emited.', async (done) => {
+        let testMsgStr = JSON.stringify(testMsg);
+        for (let i = 0; i < CONNECTION_NUM; i++) {
+          users[i].on('message', (msg: any) => {
+            chai.expect(JSON.stringify(msg)).to.equal(testMsgStr);
+            if (i === CONNECTION_NUM - 1) {
+                done();
+            }
+          });
+          await users[i].emit('message', testMsg);
+        }
       });
+    });
 
     describe('Date Events', () => {
       it('Clients should receive a date with datetime from server.', (done) => {
         let testDate = {datetime: {time: new Date().getTime()}};
         for (let i = 0; i < CONNECTION_NUM; i++) {
           users[i].on('datetime', (msg: any) => {
-            Chai.expect(msg).to.have.property('datetime').to.have.property('time');
+            chai.expect(msg).to.have.property('datetime').to.have.property('time');
             if (i === CONNECTION_NUM - 1) {
                 done();
             }
